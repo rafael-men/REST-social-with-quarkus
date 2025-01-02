@@ -1,8 +1,13 @@
 package io.rafaelmen.Dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class CreateUserRequest {
 
+    @NotBlank(message = "Name required")
     private String name;
+    @NotNull(message = "Age required")
     private Integer age;
 
     public String getName() {
