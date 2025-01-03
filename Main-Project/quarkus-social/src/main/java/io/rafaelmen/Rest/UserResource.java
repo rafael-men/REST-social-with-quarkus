@@ -1,22 +1,20 @@
 package io.rafaelmen.Rest;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import io.rafaelmen.Dto.CreateUserRequest;
+import io.rafaelmen.Dto.ResponseError;
 import io.rafaelmen.Model.User;
 import io.rafaelmen.Repository.UserRepository;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolation;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.xml.sax.SAXException;
-
-import javax.xml.transform.Source;
-import javax.xml.validation.Validator;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 
 
 @Path("/users")
@@ -25,26 +23,30 @@ import java.util.Map;
 public class UserResource {
 
     private final UserRepository repository;
-    private final Validator validator;
+
+    private final jakarta.validation.Validator validator;
 
     @Inject
-    public UserResource (UserRepository repository, Validator validator) {
+    public UserResource (UserRepository repository, jakarta.validation.Validator validator) {
         this.repository = repository;
-        this.validator = validator;
+        this.validator = (jakarta.validation.Validator) validator;
     }
-
     @POST
     @Transactional
     @Path("new")
-    public Response createUser(CreateUserRequest request ) throws IOException, SAXException {
-        validator.validate((Source) request);
+    public Response createUser(CreateUserRequest request) throws IOException, SAXException {
+        Set<ConstraintViolation<CreateUserRequest>> violations = validator.validate(request);
+        if(violations.isEmpty()) {
+            ResponseError responseError = ResponseError.createFromValidation(violations);
+            return Response.status(400).entity(responseError).build();
+        }
         User user = new User();
         user.setAge(request.getAge());
         user.setName(request.getName());
-
         repository.persist(user);
-        return Response.ok(request).build();
+        return Response.ok(user).build();
     }
+
 
     @GET
     public Response getAllUsers() {

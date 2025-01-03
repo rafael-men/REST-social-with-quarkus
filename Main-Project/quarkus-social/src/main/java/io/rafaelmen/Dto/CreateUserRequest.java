@@ -3,7 +3,9 @@ package io.rafaelmen.Dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class CreateUserRequest {
+import javax.xml.transform.Source;
+
+public class CreateUserRequest implements Source {
 
     @NotBlank(message = "Name required")
     private String name;
@@ -24,5 +26,20 @@ public class CreateUserRequest {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    @Override
+    public void setSystemId(String systemId) {
+
+    }
+
+    @Override
+    public String getSystemId() {
+        return "";
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return Source.super.isEmpty();
     }
 }
