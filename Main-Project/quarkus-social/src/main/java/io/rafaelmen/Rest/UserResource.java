@@ -36,9 +36,9 @@ public class UserResource {
     @Path("new")
     public Response createUser(CreateUserRequest request) throws IOException, SAXException {
         Set<ConstraintViolation<CreateUserRequest>> violations = validator.validate(request);
-        if(violations.isEmpty()) {
+        if (!violations.isEmpty()) { // Alterado para verificar se há violações
             ResponseError responseError = ResponseError.createFromValidation(violations);
-            return Response.status(400).entity(responseError).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(responseError).build();
         }
         User user = new User();
         user.setAge(request.getAge());

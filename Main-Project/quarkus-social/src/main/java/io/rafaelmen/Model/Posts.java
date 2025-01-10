@@ -14,7 +14,7 @@ public class Posts {
     private Long id;
     private String text;
     @Column(name = "date_time")
-    private LocalDateTime dataTime;
+    private LocalDateTime dateTime;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -22,19 +22,11 @@ public class Posts {
     public Posts() {
     }
 
-    public Posts(Long id, LocalDateTime dataTime, String text, User user) {
+    public Posts(Long id, LocalDateTime dateTime, String text, User user) {
         this.id = id;
-        this.dataTime = dataTime;
+        this.dateTime = dateTime;
         this.text = text;
         this.user = user;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getText() {
@@ -45,12 +37,20 @@ public class Posts {
         this.text = text;
     }
 
-    public LocalDateTime getDataTime() {
-        return dataTime;
+    public Long getId() {
+        return id;
     }
 
-    public void setDataTime(LocalDateTime dataTime) {
-        this.dataTime = dataTime;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public User getUser() {
@@ -66,11 +66,11 @@ public class Posts {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Posts posts = (Posts) object;
-        return Objects.equals(id, posts.id) && Objects.equals(text, posts.text) && Objects.equals(dataTime, posts.dataTime) && Objects.equals(user, posts.user);
+        return Objects.equals(id, posts.id) && Objects.equals(text, posts.text) && Objects.equals(dateTime, posts.dateTime) && Objects.equals(user, posts.user);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, text, dataTime, user);
+        return Objects.hash(id, text, dateTime, user);
     }
 }

@@ -1,29 +1,31 @@
 package io.rafaelmen.Dto;
 
 import io.rafaelmen.Model.Posts;
-import jakarta.ws.rs.core.Response;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class PostResponse {
     private String text;
-    private LocalDateTime dataTime;
+    private LocalDateTime dateTime;
+
 
     public static PostResponse fromEntity(Posts post) {
         var response = new PostResponse();
-        response.setText(response.getText());
-        response.setDataTime(response.getDataTime());
+        response.setText(post.getText());
+        response.setDataTime(post.getDateTime());
         return response;
     }
 
-    public PostResponse(String text, LocalDateTime dataTime) {
+
+    public PostResponse(String text, LocalDateTime dateTime) {
         this.text = text;
-        this.dataTime = dataTime;
+        this.dateTime = dateTime;
     }
+
 
     public PostResponse() {
     }
+
 
     public String getText() {
         return text;
@@ -33,12 +35,12 @@ public class PostResponse {
         this.text = text;
     }
 
-    public LocalDateTime getDataTime() {
-        return dataTime;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setDataTime(LocalDateTime dataTime) {
-        this.dataTime = dataTime;
+    public void setDataTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     @Override
@@ -46,12 +48,11 @@ public class PostResponse {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         PostResponse that = (PostResponse) object;
-        return Objects.equals(text, that.text) && Objects.equals(dataTime, that.dataTime);
+        return Objects.equals(text, that.text) && Objects.equals(dateTime, that.dateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(text, dataTime);
+        return Objects.hash(text, dateTime);
     }
 }
-

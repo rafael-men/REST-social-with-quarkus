@@ -45,7 +45,7 @@ public class PostResource {
         Posts post = new Posts();
         post.setText(request.getText());
         post.setUser(user);
-        post.setDataTime(LocalDateTime.now());
+        post.setDateTime(LocalDateTime.now());
         postRepository.persist(post);
         return Response.status(Response.Status.CREATED).build();
     }
@@ -56,36 +56,9 @@ public class PostResource {
         if(user == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-    PanacheQuery<Posts> query = postRepository.find("user", Sort.by("dataTime", Sort.Direction.Ascending),user);
+    PanacheQuery<Posts> query = postRepository.find("user", Sort.by("dateTime", Sort.Direction.Ascending),user);
         var list = query.list();
         var postResponseList = list.stream().map(PostResponse::fromEntity).collect(Collectors.toList());
         return Response.ok(postResponseList).build();
     }
-
-    @PUT
-    @Path("/{postId}")
-    @Transactional
-    public Response replacePost(@PathParam("userId") Long userId,
-                                @PathParam("postId") Long postId,
-                                CreatePostRequest request) {
-        User user = repository.findById(userId);
-        if (user == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
-        }
-        Posts post = postRepository.findById(postId);
-        if (post == null || !post.getUser().getId().equals(userId)) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Post not found or does not belong to the user").build();
-        }
-        if (request.getText() != null) {
-            post.setText(request.getText());
-        } else {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Text field is required").build();
-        }
-
-        postRepository.persist(post);
-
-        return Response.ok(post).build();
-    }
-
-
 }
