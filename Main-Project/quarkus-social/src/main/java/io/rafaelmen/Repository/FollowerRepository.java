@@ -6,6 +6,9 @@ import io.quarkus.panache.common.Parameters;
 import io.rafaelmen.Model.Followers;
 import io.rafaelmen.Model.User;
 import jakarta.enterprise.context.ApplicationScoped;
+
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -18,4 +21,9 @@ public class FollowerRepository implements PanacheRepository<Followers> {
         return result.isPresent();
     }
 
+
+    public List<Followers> findByUser(Long userId) {
+        PanacheQuery<Followers> query = find("user.id", userId);
+        return query.list();
+    }
 }
