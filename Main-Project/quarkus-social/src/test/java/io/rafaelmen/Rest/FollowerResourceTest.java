@@ -2,50 +2,49 @@ package io.rafaelmen.Rest;
 
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
-import io.rafaelmen.Dto.CreatePostRequest;
+import io.rafaelmen.Dto.FollowerRequest;
 import io.rafaelmen.Model.User;
+import io.rafaelmen.Repository.FollowerRepository;
 import io.rafaelmen.Repository.UserRepository;
 import io.restassured.http.ContentType;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
+import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
-@TestHTTPEndpoint(PostResource.class)
-class PostResourceTest {
+@TestHTTPEndpoint(FollowerResource.class)
+class FollowerResourceTest {
 
     @Inject
     UserRepository userRepository;
 
-    private Long userId;
+    @Inject
+    FollowerRepository followerRepository;
+
+    Long userId;
 
     @BeforeEach
     @Transactional
-    public void setUp() {
-        // Criação e persistência de um usuário para o teste
+    void setUp() {
         var user = new User();
         user.setAge(30);
         user.setName("Jonas");
         userRepository.persist(user);
-        userRepository.flush();
         userId = user.getId();
     }
 
     @Test
-    public void createPostTest() {
-        // Preparação da requisição de criação de post
-        var postRequest = new CreatePostRequest();
-        postRequest.setText("lorem ipsum...");
+    public void sameUserTest() {
+        var body = new FollowerRequest();
+        body.setFollowerId(userId);
 
-        // Execução do teste
-        given()
-                .contentType(ContentType.JSON)
-                .body(postRequest)
-                .pathParam("userId", userId)
-                .when()
-                .post("/{userId}/new");
+        given().contentType(ContentType.JSON).body(body).pathParam("userId",userId)
+                .when().put().then().statusCode(Response.Status.CONFLICT.getStatusCode());
+
     }
 }

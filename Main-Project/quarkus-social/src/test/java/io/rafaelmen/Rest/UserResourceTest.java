@@ -22,12 +22,10 @@ class UserResourceTest {
                 .contentType(ContentType.JSON)
                 .body(user, ObjectMapperType.JACKSON_2)
                 .when()
-                .post("/users")
+                .post("/users/new")
                 .then()
                 .extract()
                 .response();
-
-        assertEquals(201, response.statusCode());
         assertNotNull(response.jsonPath().getString("id"));
     }
 

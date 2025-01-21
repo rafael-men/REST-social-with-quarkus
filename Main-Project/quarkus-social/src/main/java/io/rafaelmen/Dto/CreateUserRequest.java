@@ -1,5 +1,6 @@
 package io.rafaelmen.Dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -39,7 +40,9 @@ public class CreateUserRequest implements Source {
     }
 
     @Override
+    @JsonIgnore
     public boolean isEmpty() {
         return Source.super.isEmpty();
     }
+
 }
